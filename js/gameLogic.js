@@ -35,7 +35,7 @@ function gameOverAnimation() {
 
 function playSound(id) {
     let fileName = id
-    if (id===undefined) { fileName = "wrong" }
+    if (id === undefined) { fileName = "wrong" }
 
     let sound = new Audio("/sounds/" + fileName + ".mp3")
     sound.play()
@@ -70,7 +70,6 @@ function levelUp() {
 }
 
 function resetPatterns() {
-    gamePattern = []
     userPattern = []
 }
 
@@ -85,11 +84,11 @@ function gameOver() {
 }
 
 function nextSequence() {
-    for (let i = 0; i < level; i++) {
-        let randInt = Math.floor(Math.random() * 4)
-        let color = buttonColors[randInt]
-        gamePattern.push(color)
-    }
+
+    let randInt = Math.floor(Math.random() * 4)
+    let color = buttonColors[randInt]
+    gamePattern.push(color)
+
     console.log(gamePattern)
 }
 
