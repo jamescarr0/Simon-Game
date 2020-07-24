@@ -10,6 +10,7 @@ body {
   color: #FEF2BF;
 }
 
+
 .grid-container {
   justify-content: center;
   display: grid;
@@ -31,11 +32,6 @@ body {
   height: 200px;
   border: 10px solid black;
   border-radius: 20%;
-}
-
-.game-over {
-  background-color: red;
-  opacity: 0.8;
 }
 
 .red {
@@ -72,6 +68,19 @@ body {
   animation: button 0.250s linear;
 }
 @keyframes button {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.game-over {
+  background-color: red;
+  animation: bg 0.250s ease-in-out;
+}
+@keyframes bg {
   0% {
     opacity: 1;
   }
