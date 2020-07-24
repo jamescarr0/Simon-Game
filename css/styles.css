@@ -67,3 +67,15 @@ body {
   box-shadow: 0 0 20px white;
   background-color: grey;
 }
+
+.flash {
+  animation: button 0.250s linear;
+}
+@keyframes button {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
