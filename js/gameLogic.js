@@ -1,7 +1,12 @@
+let gameActive = false
 let level = 0
 let buttonColors = ["red", "blue", "green", "yellow"]
 let gamePattern = []
 let userPattern = []
+
+function levelUp() {
+    $('#level-title').text("Level " + level)
+}
 
 function btnFeedbackAnimation(btnColor) {
     $("." + btnColor).addClass("flash")
@@ -39,8 +44,22 @@ function nextSequence() {
     gamePattern.push(color)
     btnFeedbackAnimation(color)
     playSound(color)
+    
+    level++
+    levelUp()
 }
 
+function checkAnswer(currentLevel) {
+    console.log(userPattern[currentLevel-1])
+
+    if(userPattern[currentLevel-1]===gamePattern[currentLevel-1]) {
+        console.log("Correct")
+    } else {
+        console.log("Game Over!")
+    }
+}
+
+// Mouse click event.
 $(".btn").on("click", function (e) {
     /* 
         Get the id of the button clicked event 
@@ -49,8 +68,22 @@ $(".btn").on("click", function (e) {
 
     let buttonClicked = e.target.id.slice(1,e.target.id.length)
     userPattern.push(buttonClicked)
+
+    checkAnswer(userPattern.length)
+
     btnFeedbackAnimation(buttonClicked)
     playSound(buttonClicked)
+})
+
+// Button click event - Starts game.
+$(document).keypress(function() {
+    if (!gameActive) {
+        gameActive = true
+        nextSequence()
+        levelUp()
+    } else {
+        console.log("Game already started")
+    }
 })
 
 
