@@ -1,5 +1,5 @@
 let gameActive = false
-let level = 0
+let level = 3
 let buttonColors = ["red", "blue", "green", "yellow"]
 let gamePattern = []
 let userPattern = []
@@ -54,28 +54,16 @@ function playSound(id) {
     }
 }
 
-function nextSequence() {
-    let randInt = Math.floor(Math.random() * 4)
-    let color = buttonColors[randInt]
-    gamePattern.push(color)
-
-    btnFeedbackAnimation(color)
-    playSound(color)
-
-    levelTitle()
-}
-
 function checkAnswer(currentLevel, btnId) {
     if (gamePattern[currentLevel] === userPattern[currentLevel]) {
-        if (userPattern.length === gamePattern.length) {
-            setTimeout(function () {
-                nextSequence()
-            }, 1000)
-        }
         console.log("Correct")
         playSound(btnId)
         btnFeedbackAnimation(btnId)
-        level++
+
+        if(userPattern.length===gamePattern.length) {
+            console.log("seq complete level up")
+        }
+
     } else {
         console.log("gameover")
         gameOver()
@@ -91,14 +79,35 @@ function gameOver() {
     level = 0
 }
 
+function nextSequence() {
+    for (let i = 0; i < level; i++) {
+        let randInt = Math.floor(Math.random() * 4)
+        let color = buttonColors[randInt]
+        gamePattern.push(color)
+    }
+    console.log(gamePattern)
+}
+
+function playGameSequence() {
+    for (var i = 0; i < level; i++) {
+        let index = i
+        setTimeout(function () {
+            btnFeedbackAnimation(gamePattern[index])
+            playSound(gamePattern[index])
+        }, 1000 * index)
+    }
+}
+
 // Mouse click event.
 $(".btn").on("click", function (e) {
     /* 
         Get the id of the button clicked event 
         Remove the # sign from the beginning of the string.
     */
+
     let buttonClicked = e.target.id.slice(1, e.target.id.length)
     userPattern.push(buttonClicked)
+
     checkAnswer(userPattern.length - 1, buttonClicked)
 })
 
@@ -106,9 +115,12 @@ $(".btn").on("click", function (e) {
 $(document).keypress(function () {
     if (!gameActive) {
         gameActive = true
-        nextSequence()
+
         levelTitle()
+        nextSequence()
+        playGameSequence()
     } else {
         console.log("Game already started")
     }
 })
+
