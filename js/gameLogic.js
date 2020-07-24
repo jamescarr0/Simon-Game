@@ -1,8 +1,12 @@
 let gameActive = false
-let level = 3
+let level = 1
 let buttonColors = ["red", "blue", "green", "yellow"]
 let gamePattern = []
 let userPattern = []
+
+// delay speeds in milliseconds.
+const sequenceSpeed = 500
+const levelDelaySpeed = 1500
 
 function levelTitle(str) {
     let title = ""
@@ -30,28 +34,11 @@ function gameOverAnimation() {
 }
 
 function playSound(id) {
-    switch (id) {
-        case "red":
-            let red = new Audio("/sounds/red.mp3")
-            red.play()
-            break;
-        case "blue":
-            let blue = new Audio("/sounds/blue.mp3")
-            blue.play()
-            break;
-        case "green":
-            let green = new Audio("/sounds/green.mp3")
-            green.play()
-            break;
-        case "yellow":
-            let yellow = new Audio("/sounds/yellow.mp3")
-            yellow.play()
-            break;
-        default:
-            let gameOver = new Audio("/sounds/wrong.mp3")
-            gameOver.play()
-            break;
-    }
+    let fileName = id
+    if (id===undefined) { fileName = "wrong" }
+
+    let sound = new Audio("/sounds/" + fileName + ".mp3")
+    sound.play()
 }
 
 function checkAnswer(currentLevel, btnId) {
@@ -60,8 +47,8 @@ function checkAnswer(currentLevel, btnId) {
         playSound(btnId)
         btnFeedbackAnimation(btnId)
 
-        if(userPattern.length===gamePattern.length) {
-            console.log("seq complete level up")
+        if (userPattern.length === gamePattern.length) {
+            levelUp()
         }
 
     } else {
@@ -71,12 +58,30 @@ function checkAnswer(currentLevel, btnId) {
     }
 }
 
+function levelUp() {
+    level++
+    levelTitle()
+
+    setTimeout(function () {
+        resetPatterns()
+        nextSequence()
+        playGameSequence()
+    }, levelDelaySpeed)
+}
+
+function resetPatterns() {
+    gamePattern = []
+    userPattern = []
+}
+
 function gameOver() {
     // Change the body background red and then remove class - visual feedback for wrong answer
     gameOverAnimation()
     playSound()
     levelTitle("Game Over!")
+    resetPatterns()
     level = 0
+    gameActive = false
 }
 
 function nextSequence() {
@@ -94,7 +99,7 @@ function playGameSequence() {
         setTimeout(function () {
             btnFeedbackAnimation(gamePattern[index])
             playSound(gamePattern[index])
-        }, 1000 * index)
+        }, sequenceSpeed * index)
     }
 }
 
