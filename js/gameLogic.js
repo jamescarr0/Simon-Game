@@ -122,7 +122,8 @@ $(document).keypress(function () {
 
         levelTitle()
         nextSequence()
-        playGameSequence()
+        
+        setTimeout(playGameSequence, 1000)
     } else {
         console.log("Game already started")
     }
