@@ -8,17 +8,21 @@ let userPattern = []
 const sequenceSpeed = 500
 const levelDelaySpeed = 1500
 
-function levelTitle(str) {
-    let title = ""
+// Randomly generate the next colour in the sequence
+function nextSequence() { gamePattern.push(buttonColors[Math.floor(Math.random() * 4)]) }
 
-    if (str === undefined) {
-        title = "Level: " + level
-    } else {
-        title = str
+// Show user the current game sequence for the current level. 
+function playGameSequence() {
+    for (var i = 0; i < level; i++) {
+        let index = i
+        setTimeout(function () {
+            playSound(gamePattern[index])
+            btnFeedbackAnimation(gamePattern[index])
+        }, sequenceSpeed * index)
     }
-    $('#level-title').text(title)
 }
 
+// Visual feedback for user.  Colour 'flashes' on screen.
 function btnFeedbackAnimation(btnColor) {
     $("." + btnColor).addClass("flash")
     setTimeout(function () {
@@ -26,38 +30,17 @@ function btnFeedbackAnimation(btnColor) {
     }, 250)
 }
 
-function gameOverAnimation() {
-    $(document.body).addClass("game-over")
-    setTimeout(function () {
-        $(document.body).removeClass("game-over")
-    }, 250)
-}
-
-function playSound(id) {
-    let fileName = id
-    if (id === undefined) { fileName = "wrong" }
-
-    let sound = new Audio("/sounds/" + fileName + ".mp3")
-    sound.play()
-}
-
+// Check users answer against the game pattern.  
 function checkAnswer(currentLevel, btnId) {
     if (gamePattern[currentLevel] === userPattern[currentLevel]) {
-        console.log("Correct")
         playSound(btnId)
         btnFeedbackAnimation(btnId)
 
-        if (userPattern.length === gamePattern.length) {
-            levelUp()
-        }
-
-    } else {
-        console.log("gameover")
-        gameOver()
-        return
-    }
+        if (userPattern.length === gamePattern.length) { levelUp() }
+        } else { gameOver(); return }
 }
 
+// Add another colour to the game sequence and increment level on screen.
 function levelUp() {
     level++
     levelTitle()
@@ -69,63 +52,64 @@ function levelUp() {
     }, levelDelaySpeed)
 }
 
-function resetPatterns() {
-    userPattern = []
+// Change the level text inside #level-title on page.
+function levelTitle(str) {
+    let title = ""
+
+    if (str === undefined) { title = "Level: " + level } 
+    else { title = str }
+    $('#level-title').text(title)
 }
 
+// Game over! reset game.
 function gameOver() {
-    // Change the body background red and then remove class - visual feedback for wrong answer
-    gameOverAnimation()
     playSound()
-    levelTitle("Game Over!")
+    gameOverAnimation()
+    levelTitle("Game Over")
     resetPatterns()
     level = 0
     gameActive = false
 }
 
-function nextSequence() {
-
-    let randInt = Math.floor(Math.random() * 4)
-    let color = buttonColors[randInt]
-    gamePattern.push(color)
-
-    console.log(gamePattern)
+// Flash the screen red on incorrect answer.
+function gameOverAnimation() {
+    $(document.body).addClass("game-over")
+    setTimeout(function () {
+        $(document.body).removeClass("game-over")
+    }, 250)
 }
 
-function playGameSequence() {
-    for (var i = 0; i < level; i++) {
-        let index = i
-        setTimeout(function () {
-            btnFeedbackAnimation(gamePattern[index])
-            playSound(gamePattern[index])
-        }, sequenceSpeed * index)
-    }
+// Reset the user input pattern.
+function resetPatterns() { userPattern = [] }
+
+// Create a file path to the sound and play the corresponding sound.
+function playSound(id) {
+    let fileName = id
+    if (id === undefined) { fileName = "wrong" }
+    let sound = new Audio("/sounds/" + fileName + ".mp3")
+    sound.play()
 }
 
-// Mouse click event.
-$(".btn").on("click", function (e) {
+// Mouse click event / User selecting answering.  Append to user pattern.
+$(".btn").click(function (e) {
     /* 
         Get the id of the button clicked event 
         Remove the # sign from the beginning of the string.
     */
-
-    let buttonClicked = e.target.id.slice(1, e.target.id.length)
-    userPattern.push(buttonClicked)
-
-    checkAnswer(userPattern.length - 1, buttonClicked)
+    if (gameActive) {
+        let buttonClicked = e.target.id.slice(1, e.target.id.length)
+        userPattern.push(buttonClicked)
+        checkAnswer(userPattern.length - 1, buttonClicked)
+    }
 })
 
-// Button click event - Starts game.
-$(document).keypress(function () {
+// Button click event - Start game.
+$(document).on("keypress", function () {
     if (!gameActive) {
         gameActive = true
-
         levelTitle()
         nextSequence()
-        
         setTimeout(playGameSequence, 1000)
-    } else {
-        console.log("Game already started")
     }
 })
 
