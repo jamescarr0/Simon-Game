@@ -132,4 +132,3 @@ $("button").click(function (e) {
         resetGame()
     }
 })
-
