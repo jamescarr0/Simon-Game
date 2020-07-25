@@ -9,7 +9,9 @@ const sequenceSpeed = 500
 const levelDelaySpeed = 1500
 
 // Randomly generate the next colour in the sequence
-function nextSequence() { gamePattern.push(buttonColors[Math.floor(Math.random() * 4)]) }
+function nextSequence() { 
+    gamePattern.push(buttonColors[Math.floor(Math.random() * 4)]) 
+}
 
 // Show user the current game sequence for the current level. 
 function playGameSequence() {
@@ -37,38 +39,37 @@ function checkAnswer(currentLevel, btnId) {
         btnFeedbackAnimation(btnId)
 
         if (userPattern.length === gamePattern.length) { levelUp() }
-        } else { gameOver(); return }
+    } else { gameOver(); return }
 }
 
 // Add another colour to the game sequence and increment level on screen.
 function levelUp() {
     level++
-    levelTitle()
-
+    updateLevelText()
     setTimeout(function () {
-        resetPatterns()
+        resetUserPattern()
         nextSequence()
         playGameSequence()
     }, levelDelaySpeed)
 }
 
-// Change the level text inside #level-title on page.
-function levelTitle(str) {
+// Update level on screen.
+function updateLevelText(str) {
     let title = ""
-
-    if (str === undefined) { title = "Level: " + level } 
-    else { title = str }
-    $('#level-title').text(title)
+    if (str === undefined) {
+        title = "Level: " + level
+        $('#feedback').text(title)
+    }
+    else { $('#level-title').text(str) }
 }
 
 // Game over! reset game.
 function gameOver() {
-    playSound()
-    gameOverAnimation()
-    levelTitle("Game Over")
-    resetPatterns()
-    level = 0
     gameActive = false
+    playSound("wrong")
+    gameOverAnimation()
+    updateLevelText("Game Over")
+    resetGame()
 }
 
 // Flash the screen red on incorrect answer.
@@ -80,12 +81,10 @@ function gameOverAnimation() {
 }
 
 // Reset the user input pattern.
-function resetPatterns() { userPattern = [] }
+function resetUserPattern() { userPattern = [] }
 
 // Create a file path to the sound and play the corresponding sound.
-function playSound(id) {
-    let fileName = id
-    if (id === undefined) { fileName = "wrong" }
+function playSound(fileName) {
     let sound = new Audio("/sounds/" + fileName + ".mp3")
     sound.play()
 }
@@ -103,13 +102,34 @@ $(".btn").click(function (e) {
     }
 })
 
+function runGame() {
+    gameActive = true
+    updateLevelText()
+    updateLevelText("Game started")
+    nextSequence()
+    setTimeout(playGameSequence, 1000)
+}
+
+function resetGame() {
+    level = 1
+    gamePattern.length=0
+    userPattern.length=0
+}
+
 // Button click event - Start game.
-$(document).on("keypress", function () {
-    if (!gameActive) {
-        gameActive = true
-        levelTitle()
-        nextSequence()
-        setTimeout(playGameSequence, 1000)
+$("button").click(function (e) { 
+
+    if (e.target.id==="#start-btn") {
+        console.log("start button")
+        if (!gameActive) {
+            runGame() 
+       }
+    }
+    else { 
+        console.log("reset button")
+        gameOver()
+        updateLevelText("Reset: Click start to play")
+        resetGame()
     }
 })
 

@@ -1,27 +1,30 @@
 body {
+  font-family: 'Press Start 2P', cursive;
   text-align: center;
   background-color: #011F3F;
+  color: #FEF2BF;
 }
 
 #level-title {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 3rem;
-  margin:  5%;
-  color: #FEF2BF;
+  font-size: 2rem;
+  padding: 2rem;
+}
+
+#feedback {
+  padding: 2rem;
 }
 
 
 .grid-container {
   justify-content: center;
   display: grid;
-  grid-template-columns: 200px 200px;
-  grid-template-rows: 200px 200px;
-  column-gap: 20px;
-  row-gap: 20px;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto;
+
   grid-template-areas: 
   "btn-green btn-red"
+  "btn-container btn-container"
   "btn-yellow btn-blue";
-
 }
 
 .btn {
@@ -31,27 +34,58 @@ body {
   width: 200px;
   height: 200px;
   border: 10px solid black;
-  border-radius: 20%;
+  border-radius: 10%;
+  box-shadow: 2px 2px 20px #515151;
+}
+
+.btn-container {
+  grid-area: btn-container;
+  display: flex;
+  justify-content: center;
+}
+
+.simon {
+  align-self: center;
+  font-family: 'Electrolize', sans-serif;
+  font-size: 2rem;
+}
+
+.control-btn {
+  background-color: red;
+  border-radius: 100%;
+  height: 50px;
+  width: 50px;
+  border: 0;
+  margin: 0 20px;
+  box-shadow: 2px 2px 20px #515151;
+}
+
+.control-btn:hover {
+  box-shadow: 0 0 1rem white;
 }
 
 .red {
-  grid-area: "btn-red";
+  grid-area: btn-red;
   background-color: red;
+  border-top-right-radius: 100%;
 }
 
 .green {
-  grid-area: "btn-green";
+  grid-area: btn-green;
   background-color: green;
+  border-top-left-radius: 100%;
 }
 
 .blue {
-  grid-area: "btn-blue";
+  grid-area: btn-blue;
   background-color: blue;
+  border-bottom-right-radius: 100%;
 }
 
 .yellow {
-  grid-area: "btn-yellow";
+  grid-area: btn-yellow;
   background-color: yellow;
+  border-bottom-left-radius: 100%;
 }
 
 .btn-center {

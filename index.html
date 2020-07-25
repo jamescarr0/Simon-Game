@@ -6,20 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simon</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <h1 id="level-title">Press A Key to Start</h1>
+  <h1 id="level-title">Click start to play.</h1>
 
   <div class="grid-container">
 
     <div id="#green" class="btn btn-center green"></div>
     <div id="#red" class="btn btn-center red"></div>
+
+    <div class="btn-container">
+      <button id="#start-btn" type="button" class="control-btn">start</button>
+      <span class="simon">simon</span>
+      <button id="#reset-btn" type="button"  class="control-btn">reset</button>
+    </div>
+
     <div id="#yellow" class="btn btn-center yellow"></div>
     <div id="#blue" class="btn btn-center blue"></div>
 
   </div>
+
+  <div id="feedback"></div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="js/gameLogic.js"></script>
